@@ -11,21 +11,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LogsComponent implements OnInit {
   logs: Log[];
+  selectedLog: Log;
+  loaded = false;
+
 
   constructor(private loggy: LogService) { }
 
   ngOnInit() {
-    this.loggy.getLogs().subscribe( logs => {
+
+    this.loggy.stateClear.subscribe((clear) => {
+      if (clear) {
+        this.selectedLog = {
+          id: '',
+          text: '',
+          date: ''
+        };
+      }
+    });
+
+
+    this.loggy.getLogs().subscribe(logs => {
       this.logs = logs;
+      this.loaded = true;
     });
   }
 
   onSelect(log: Log) {
     this.loggy.setForm(log);
+    this.selectedLog = log;
   }
 
   delLoggy(log: Log) {
-    if(confirm("Are you sure?")) {
+    if (confirm('Are you sure?')) {
       this.loggy.onDel(log);
     }
 

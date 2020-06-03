@@ -12,7 +12,7 @@ export class LogFormComponent implements OnInit {
   id: string;
   text: string;
   date: string;
-  isNew: boolean = true;
+  isNew = true;
 
   constructor(private loggy2: LogService) { }
 
@@ -30,8 +30,6 @@ export class LogFormComponent implements OnInit {
   }
 
   onSubmit() {
-
-
     // console.log("I hope you come in future")
     // Check if log is new
     if (this.isNew) {
@@ -40,7 +38,6 @@ export class LogFormComponent implements OnInit {
         id: this.generateId(),
         text: this.text,
         date: new Date()
-
       };
       // Adding log to array of logs
       this.loggy2.addLog(newLog);
@@ -53,8 +50,18 @@ export class LogFormComponent implements OnInit {
       };
       // Add to array of log using
       this.loggy2.onUpdateLog(updateLog);
-
     }
+    // Clear the state
+    this.clearForm();
+  }
+
+  // Method to clear form when done
+  clearForm() {
+    this.isNew = true;
+    this.id = '';
+    this.text = '';
+    this.date = '';
+    this.loggy2.stateOfForm();
   }
 
   generateId() {
