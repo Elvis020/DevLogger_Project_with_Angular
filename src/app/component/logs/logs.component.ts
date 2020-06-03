@@ -15,10 +15,19 @@ export class LogsComponent implements OnInit {
   constructor(private loggy: LogService) { }
 
   ngOnInit() {
-    this.logs = this.loggy.getLogs();
+    this.loggy.getLogs().subscribe( logs => {
+      this.logs = logs;
+    });
   }
 
   onSelect(log: Log) {
     this.loggy.setForm(log);
+  }
+
+  delLoggy(log: Log) {
+    if(confirm("Are you sure?")) {
+      this.loggy.onDel(log);
+    }
+
   }
 }
