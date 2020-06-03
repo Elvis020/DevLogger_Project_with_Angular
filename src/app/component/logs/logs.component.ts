@@ -36,6 +36,7 @@ export class LogsComponent implements OnInit {
     });
   }
 
+
   onSelect(log: Log) {
     this.loggy.setForm(log);
     this.selectedLog = log;

@@ -12,6 +12,7 @@ export class LogService {
 
   logs: Log[];
 
+
   private logSource = new BehaviorSubject<Log>({ id: null, text: null, date: null });
   selectedLogs = this.logSource.asObservable();
 
@@ -27,8 +28,18 @@ export class LogService {
     this.logs = [];
   }
 
+
+
   getLogs(): Observable<Log[]> {
-    return of(this.logs);
+    if (localStorage.getItem('logs') === null) {
+      this.logs = [];
+    } else {
+      this.logs = JSON.parse(localStorage.getItem('logs'));
+    }
+
+    return of(this.logs.sort((a, b) => {
+      return b.date - a.date;
+    }));
   }
 
   setForm(log: Log) {
@@ -37,6 +48,8 @@ export class LogService {
 
   addLog(log: Log) {
     this.logs.unshift(log);
+    // Add to local Storage
+    localStorage.setItem('logs', JSON.stringify(this.logs));
   }
 
   onUpdateLog(log: Log) {
@@ -46,6 +59,9 @@ export class LogService {
       }
     });
     this.logs.unshift(log);
+
+    // Update local Storage
+    localStorage.setItem('logs', JSON.stringify(this.logs));
   }
 
   onDel(log: Log) {
@@ -53,6 +69,8 @@ export class LogService {
       if (currentLog.id === log.id) {
         this.logs.splice(index, 1);
       }
+      // Delete from local Storage
+      localStorage.setItem('logs', JSON.stringify(this.logs));
     });
   }
 
